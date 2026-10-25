@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediTrack Pro | Elderly Medication Reminder & Adherence Tracker</title>
+  <meta name="description" content="Intelligent Medication Reminder and Adherence Tracker designed for elderly patients and chronic condition care. Features voice announcements, chimes, and weekly adherence visualizer.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="brand-wrapper">
+      <div class="logo-badge">💊</div>
+      <div class="brand-text">
+        <h1>MediTrack Pro</h1>
+        <p>Elderly Medication Reminder & Adherence Analytics</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- Live Time Indicator -->
+      <div class="live-clock-badge" id="liveClock" title="Current Synchronized System Time">
+        <span class="live-indicator"></span> Loading Time...
+      </div>
+
+      <!-- Senior Accessibility Toggle -->
+      <label style="display: flex; align-items: center; gap: 8px; font-size: 0.88rem; font-weight: 600; cursor: pointer; background: rgba(255,255,255,0.06); padding: 8px 14px; border-radius: var(--radius-full);">
+        <input type="checkbox" id="seniorModeToggle" style="width: 18px; height: 18px; accent-color: #facc15;">
+        <span>👵 Senior High-Contrast</span>
+      </label>
+
+      <!-- Add Medicine Button -->
+      <button class="btn btn-primary" onclick="openModal('addMedModal')">
+        ➕ Add Medicine
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="app-nav">
+    <button class="nav-tab active" data-tab="todaySchedule">
+      📅 Today's Schedule & Reminders
+    </button>
+    <button class="nav-tab" data-tab="analytics">
+      📊 Weekly Adherence Analytics
+    </button>
+    <button class="nav-tab" data-tab="cabinet">
+      🗄️ Medicine Cabinet (30 Presets)
+    </button>
+    <button class="nav-tab" data-tab="datasetExplorer">
+      📈 15,000 Patient Dataset Explorer
+    </button>
+    <button class="nav-tab" data-tab="caregiver">
+      🛡️ Caregiver & Voice Alert Settings
+    </button>
+  </nav>
+
+  <!-- Main Content Layout -->
+  <main class="main-layout">
+
+    <!-- TAB 1: TODAY'S SCHEDULE -->
+    <section id="todaySchedule" class="tab-pane active">
+      <!-- Next Reminder Hero Banner -->
+      <div id="reminderHero" class="reminder-hero-card glass">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <!-- Daily Routine Slots -->
+      <div class="slots-container" id="scheduleSlotsContainer">
+        <!-- Morning, Afternoon, Evening, Bedtime injected via JS -->
+      </div>
+    </section>
+
+    <!-- TAB 2: WEEKLY ADHERENCE ANALYTICS -->
+    <section id="analytics" class="tab-pane">
+      <!-- High Level Metrics Overview -->
+      <div class="stats-overview-grid">
+        <div class="stat-metric-card">
+          <div class="stat-icon" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">🏆</div>
+          <div class="stat-info">
+            <p>Weekly Adherence</p>
+            <h2 id="weeklyAvgScore">92%</h2>
+          </div>
+        </div>
+        <div class="stat-metric-card">
+          <div class="stat-icon" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">🔥</div>
+          <div class="stat-info">
+            <p>Current Streak</p>
+            <h2>6 Days</h2>
+          </div>
+        </div>
+        <div class="stat-metric-card">
+          <div class="stat-icon" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa;">💊</div>
+          <div class="stat-info">
+            <p>Doses Taken This Week</p>
+            <h2>23 / 25</h2>
+          </div>
+        </div>
+        <div class="stat-metric-card">
+          <div class="stat-icon" style="background: rgba(239, 68, 68, 0.2); color: #f87171;">⚠️</div>
+          <div class="stat-info">
+            <p>Missed / Delayed</p>
+            <h2>2 Doses</h2>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Split Layout -->
+      <div class="charts-split-grid">
+        <!-- 7-Day Visual Adherence Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h3>7-Day Adherence Visualizer</h3>
+              <p style="color: var(--text-muted); font-size: 0.85rem;">Percentage of prescribed doses taken each day this week</p>
+            </div>
+            <span class="slot-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Target: 85%+</span>
+          </div>
+
+          <div class="adherence-bars" id="adherenceBars">
+            <!-- Rendered by app.js -->
+          </div>
+
+          <div style="display: flex; justify-content: center; gap: 24px; margin-top: 18px; font-size: 0.85rem;">
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <span style="width: 12px; height: 12px; background: #10b981; border-radius: 3px;"></span> Excellent (≥90%)
+            </span>
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <span style="width: 12px; height: 12px; background: #f59e0b; border-radius: 3px;"></span> Moderate (70-89%)
+            </span>
+            <span style="display: flex; align-items: center; gap: 6px;">
+              <span style="width: 12px; height: 12px; background: #ef4444; border-radius: 3px;"></span> Low (<70%)
+            </span>
+          </div>
+        </div>
+
+        <!-- Adherence Health Gauge Dial -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Adherence Status</h3>
+          </div>
+          <div class="dial-container">
+            <svg class="svg-dial" viewBox="0 0 160 160">
+              <circle class="dial-bg" cx="80" cy="80" r="70"></circle>
+              <circle id="dialMeter" class="dial-meter" cx="80" cy="80" r="70"></circle>
+            </svg>
+            <div class="dial-text">
+              <h2 style="color: #34d399;">Optimal</h2>
+              <p>Minimal risk of therapeutic failure</p>
+            </div>
+          </div>
+
+          <div style="margin-top: 18px; padding: 14px; background: rgba(255,255,255,0.03); border-radius: var(--radius-md); font-size: 0.85rem; color: var(--text-muted);">
+            💡 <strong>Geriatric Tip:</strong> Morning adherence is highest at 96%, but Evening doses tend to be forgotten. Try setting a secondary chime after dinner.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: MEDICINE CABINET -->
+    <section id="cabinet" class="tab-pane">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+        <div>
+          <h2 style="font-size: 1.4rem; font-weight: 700;">Active Medication Regimen</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">Manage pill strengths, times, meal rules, and audio speech settings.</p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('addMedModal')">
+          ➕ Add Prescribed Drug
+        </button>
+      </div>
+
+      <div class="cabinet-grid" id="cabinetGrid">
+        <!-- Rendered by app.js -->
+      </div>
+    </section>
+
+    <!-- TAB 4: 15,000 DATASET EXPLORER -->
+    <section id="datasetExplorer" class="tab-pane">
+      <div class="dataset-banner">
+        <div>
+          <h2 style="font-size: 1.35rem; font-weight: 700;">15,000-Record Adherence Clinical Dataset</h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 4px;">
+            Simulated real-world patient adherence logs across 400 patients, 30 chronic medication regimens, elderly age cohorts (60-89), and outcome tracking.
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <a href="../medication_adherence_15000_records.csv" download="medication_adherence_15000_records.csv" class="btn btn-primary">
+            📥 Download 15k CSV (3 MB)
+          </a>
+        </div>
+      </div>
+
+      <!-- Live Search & Filter Bar -->
+      <div class="dataset-controls-row">
+        <input type="text" id="datasetSearch" class="input-search" placeholder="🔍 Search patient name, drug name (e.g. Metformin)..." style="flex: 2; min-width: 250px;">
+        
+        <select id="conditionFilter" class="select-filter" style="flex: 1;">
+          <option value="ALL">All Condition Groups</option>
+          <option value="Type 2 Diabetes">Type 2 Diabetes</option>
+          <option value="Hypertension">Hypertension</option>
+          <option value="Asthma">Asthma</option>
+          <option value="High Cholesterol">High Cholesterol</option>
+          <option value="Heart Disease">Heart Disease</option>
+          <option value="Arthritis">Arthritis</option>
+          <option value="Anemia">Anemia</option>
+          <option value="Depression/Anxiety">Depression/Anxiety</option>
+        </select>
+
+        <select id="statusFilter" class="select-filter" style="flex: 1;">
+          <option value="ALL">All Intake Statuses</option>
+          <option value="Taken">Taken</option>
+          <option value="Delayed">Delayed</option>
+          <option value="Missed">Missed</option>
+          <option value="Skipped">Skipped</option>
+        </select>
+      </div>
+
+      <div style="margin-bottom: 12px; font-size: 0.88rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+        <span id="datasetFilteredCount">Loading dataset records...</span>
+        <span style="color: #34d399; font-weight: 600;">Overall Population Adherence: 83.6%</span>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Record ID</th>
+              <th>Patient</th>
+              <th>Medicine & Strength</th>
+              <th>Condition</th>
+              <th>Scheduled</th>
+              <th>Status</th>
+              <th>Missed Reason</th>
+              <th>Caregiver Alert</th>
+            </tr>
+          </thead>
+          <tbody id="datasetTableBody">
+            <!-- Injected via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- TAB 5: CAREGIVER & ALERT SETTINGS -->
+    <section id="caregiver" class="tab-pane">
+      <div class="chart-card" style="max-width: 760px; margin: 0 auto;">
+        <div class="chart-header">
+          <h3>Caregiver Emergency & Alert Controls</h3>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="form-group">
+            <label>Designated Primary Caregiver / Family Contact</label>
+            <input type="text" class="form-control" value="Sarah Jenkins (Daughter)" placeholder="Full Name">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Caregiver Phone (SMS / WhatsApp Alerts)</label>
+              <input type="tel" class="form-control" value="+1 (555) 392-8172">
+            </div>
+            <div class="form-group">
+              <label>Urgent Alert Threshold</label>
+              <select class="form-control">
+                <option value="30">Alert if dose delayed > 30 mins</option>
+                <option value="60" selected>Alert if dose delayed > 60 mins</option>
+                <option value="120">Alert if dose delayed > 2 hours</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+            <h4 style="margin-bottom: 10px;">Audio & Voice Synthesis Diagnostics</h4>
+            <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 16px;">
+              Verify that speakers, browser notification permissions, and Web Speech voice engines are operational for the senior patient.
+            </p>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <button class="btn btn-primary" onclick="testReminderSound()">
+                🔊 Test Speaker Chime & Voice
+              </button>
+              <button class="btn btn-outline" onclick="triggerBrowserNotification('MediTrack Pro', 'Push notifications are enabled and functioning!')">
+                🔔 Test System Push Notification
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ADD MEDICINE MODAL -->
+  <div class="modal-overlay" id="addMedModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3>Add Prescription Medication</h3>
+        <button class="btn-close" onclick="closeModal('addMedModal')">&times;</button>
+      </div>
+
+      <form id="addMedForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label>⚡ Quick Select From 30 Clinical Medicines</label>
+            <select id="presetMedSelect" class="form-control">
+              <option value="">-- Choose from preset medicines or type below --</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Medicine Name *</label>
+              <input type="text" id="medNameInput" class="form-control" placeholder="e.g. Metformin" required>
+            </div>
+            <div class="form-group">
+              <label>Strength / Dose *</label>
+              <input type="text" id="medStrengthInput" class="form-control" placeholder="e.g. 500 mg" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Dosage Form</label>
+              <select id="medFormInput" class="form-control">
+                <option value="Tablet">Tablet</option>
+                <option value="Capsule">Capsule</option>
+                <option value="Inhaler">Inhaler</option>
+                <option value="Injection">Injection</option>
+                <option value="Syrup">Syrup</option>
+                <option value="Drops">Eye/Ear Drops</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Time Slot</label>
+              <select id="medSlotInput" class="form-control">
+                <option value="Morning">Morning (Breakfast)</option>
+                <option value="Afternoon">Afternoon (Lunch)</option>
+                <option value="Evening">Evening (Dinner)</option>
+                <option value="Bedtime">Bedtime (Sleep)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Scheduled Clock Time *</label>
+              <input type="time" id="medTimeInput" class="form-control" value="08:00" required>
+            </div>
+            <div class="form-group">
+              <label>Meal Relation</label>
+              <select id="medFoodInput" class="form-control">
+                <option value="After Breakfast">After Breakfast</option>
+                <option value="Before Breakfast">Before Breakfast</option>
+                <option value="With Meal">With Meal</option>
+                <option value="After Lunch">After Lunch</option>
+                <option value="After Dinner">After Dinner</option>
+                <option value="Empty Stomach">Empty Stomach</option>
+                <option value="Before Sleep">Before Sleep</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Category</label>
+              <input type="text" id="medCategoryInput" class="form-control" placeholder="e.g. Antidiabetic">
+            </div>
+            <div class="form-group">
+              <label>Condition Treated</label>
+              <input type="text" id="medConditionInput" class="form-control" placeholder="e.g. Type 2 Diabetes">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Elderly Care Notes & Instructions</label>
+            <input type="text" id="medInstructionsInput" class="form-control" placeholder="e.g. Take with a full glass of warm water. Do not lie down immediately.">
+          </div>
+        </div>
+
+        <div style="padding: 16px 24px; border-top: 1px solid var(--border-color); display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('addMedModal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Medication</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="alert-toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
